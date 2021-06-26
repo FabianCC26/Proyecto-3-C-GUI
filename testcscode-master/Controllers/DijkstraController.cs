@@ -9,6 +9,33 @@ using Microsoft.EntityFrameworkCore;
 using graph.Database;
 
 
+/*
+#############################################################################
+#
+#                       Instituto Tecnológico de Costa Rica
+#
+#                   Área Academica de Ingeniería en Computadores
+#
+#   Curso: CE-1103 Algoritmos y Estructuras de  Datos 1
+#
+#   Programa: C#
+#
+#   Profesor: Jose Isaac Ramirez Herrera
+#
+#   Autores: Fabián Castillo Cerdas, 
+#            Irene Garzona Moya, 
+#            Erick Daniel Obando Venegas, 
+#            José Andrés Quirós Guzmán, 
+#            José Pablo Ramos Madrigal
+#
+#   Fecha de última modificación: 25/06/2021
+#
+#
+#############################################################################
+*/
+
+
+
 namespace graph.Controllers
 {
 
@@ -25,12 +52,14 @@ namespace graph.Controllers
         }
 
 
+
+        //Obtiene el camino mas corto entre 2 nodos utilizando el algoritmo de Dijkstra
         [HttpGet]
         public IActionResult DijkstraAlgoritm(int id,int Start, int End)
         {
 
 
-
+            //Variables necesarias para realiazr el argoritmo
             var getGraphId=GraphDB.Instance.GetGraph(id);
 
 
@@ -46,6 +75,7 @@ namespace graph.Controllers
             //2 - Padre
 
 
+            //Se crea una matríz la cual va a guardar los datos necesarios de cada nodo
 
             int [,] tabla = new int[cantNodos,3];
 
@@ -58,6 +88,7 @@ namespace graph.Controllers
             }
             tabla[inicio,1] = 0;
 
+
             actual = inicio;
 
 
@@ -66,20 +97,28 @@ namespace graph.Controllers
 
             do{
 
+                //Se establece el nodo de inicio como visitado
 
                 tabla[actual,0] =1;
 
+                //Se realiza la operacion por cada nodo existente
                 for (int i =0; i < cantNodos; i++)
                 {
+                    //Verifica si algun nodo está conectado al nodo de inicio
                     if(getGraphId.Nodes[i].InDegree != 0){
+                        
 
+                        //Se recorre la lista de Aristas
                         for (int j = 0; j < getGraphId.Edges.Count; j++)
                         {
+
+                            //Verifica si una arista conecta el nodo en cuastion con el nodo de inicio
                             if(getGraphId.Edges[j].EndNode == i && getGraphId.Edges[j].StartNode == actual){
 
+                                
                                 distancia = getGraphId.Edges[j].Weight + tabla[actual,1];
 
-
+                                //Se sustituye la distancia en la tabla
                                 if(distancia < tabla[i,1])
                                 {
                                     tabla[i,1] = distancia;
@@ -97,7 +136,7 @@ namespace graph.Controllers
 
                 }
 
-
+                //Verififica cual es el nodo con la menor distancia y que no haya sido visitado
                 int indiceMenor = -1;
                 int distanciMenor = int.MaxValue; 
 
@@ -112,6 +151,7 @@ namespace graph.Controllers
 
                 }
 
+
                 actual = indiceMenor;
 
 
@@ -119,6 +159,8 @@ namespace graph.Controllers
             }while (actual != -1);
 
 
+
+            //Se añaden los nodos del camino mas corto a una lista
             List<int> ruta  = new List<int>();
             int nodo = final;
 
@@ -133,7 +175,12 @@ namespace graph.Controllers
             
             ruta.Reverse();
 
-            Node[] arrayNodes = new Node[ruta.Count];
+            //Con respecto a la lista de Nodos del camino mas corto, se crea un array con los objetos Nodo respectivos
+
+            object[] arrayNodes = new object[ruta.Count];
+
+
+            
 
 
 
@@ -141,21 +188,24 @@ namespace graph.Controllers
 
                 arrayNodes[i] = getGraphId.Nodes[ruta[i]];
 
-                Console.WriteLine(ruta[i]);
                 
             }
 
+            String DistanciaTotal = "Distancia total:" + distancia.ToString();
+
+            List<object> arrayNodesDistance = arrayNodes.ToList();
+
+            arrayNodesDistance.Add(DistanciaTotal);
+
+
             
 
-
-
-            Console.WriteLine(distancia);
-
-            return Ok(distancia);
-
             
-            
+            //retorna un array con los objeto Nodo que conforman el camino mas corto
 
+
+
+            return Ok(arrayNodesDistance);
 
             
         }

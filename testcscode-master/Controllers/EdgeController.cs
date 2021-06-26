@@ -4,6 +4,31 @@ using graph.Database;
 using graph.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+/*
+#############################################################################
+#
+#                       Instituto Tecnológico de Costa Rica
+#
+#                   Área Academica de Ingeniería en Computadores
+#
+#   Curso: CE-1103 Algoritmos y Estructuras de  Datos 1
+#
+#   Programa: C#
+#
+#   Profesor: Jose Isaac Ramirez Herrera
+#
+#   Autores: Fabián Castillo Cerdas, 
+#            Irene Garzona Moya, 
+#            Erick Daniel Obando Venegas, 
+#            José Andrés Quirós Guzmán, 
+#            José Pablo Ramos Madrigal
+#
+#   Fecha de última modificación: 25/06/2021
+#
+#############################################################################
+*/
+
+
 
 namespace graph.Controllers{
 
@@ -22,6 +47,9 @@ namespace graph.Controllers{
         }
 
 
+
+
+        //Crea una nueva Arista
         [HttpPost]
 
         public IActionResult AddNewEdge(int id, int startNode, int endNode, int weight){
@@ -29,17 +57,17 @@ namespace graph.Controllers{
             var getGraphId=GraphDB.Instance.GetGraph(id);
 
 
-
+            //recorre la lista de nodos
             for(int i=0; i < getGraphId.Nodes.Count ;i++){
 
-                
+                //Verifica cuales son los nodos relacionados con la arista que se crea
                 if(getGraphId.Nodes[i].Id == startNode){
 
-
+                    
                     for (int k=0; k < getGraphId.Nodes.Count ;k++){
 
 
-
+                        //Verifica si la arista termina en un nodo, si es el caso al nodo se le suma 1 al atributo de InDegree
                         if(getGraphId.Nodes[k].Id == endNode){
 
 
@@ -48,18 +76,21 @@ namespace graph.Controllers{
 
 
                                 if(getGraphId.Nodes[j].Id == startNode){
-
+                                    
+                                    //suma 1 al InDegree de dicho nodo
                                     getGraphId.Nodes[j].OutDegree +=1;
 
 
                                         for (int l=0; l < getGraphId.Nodes.Count ;l++){
 
-
+                                            //Verifica si la arista empieza en un nodo, si es el caso al nodo se le suma 1 al atributo de OutDegree
                                             if(getGraphId.Nodes[l].Id == endNode){
+                                            
 
-                                            getGraphId.Nodes[l].InDegree +=1;
-                                            getGraphId.Edges.Add(new Edge(startNode,endNode,weight));
-                                            return Ok();
+                                                //suma 1 al OutDegree de dicho nodo
+                                                getGraphId.Nodes[l].InDegree +=1;
+                                                getGraphId.Edges.Add(new Edge(startNode,endNode,weight));
+                                                return Ok();
 
                                             }
 
@@ -82,6 +113,8 @@ namespace graph.Controllers{
         }
 
 
+
+        //Obtiene las Aristas dde un Grafo en especifico
         [HttpGet]
         public IActionResult GetActionResult(int id)
         {   
@@ -98,6 +131,7 @@ namespace graph.Controllers{
 
 
 
+        //Borra todas las Aristas de un grafo
         [HttpDelete]
         public IActionResult DeleteAllEdges(int id)
         {
@@ -126,7 +160,7 @@ namespace graph.Controllers{
 
 
 
-
+        //Actualiza los atributos de una Arista
         [HttpPut("id")]
 
         public IActionResult UpdateEdgeValues(int id,int idEdge,int newStart,int newEnd,int newWeight){
@@ -162,25 +196,31 @@ namespace graph.Controllers{
 
 
 
-
+        //Borra una Arista en especifico segun su Id
         [HttpDelete("id")]
         public IActionResult Delete(int id,int idEdge)
         {
             var getGraphId=GraphDB.Instance.GetGraph(id);
     
-
+            //Verifica que el grafo exista
             if(getGraphId==null){
                 return NotFound();
 
 
             }else
             {   
-                
+                //Recorre la lista de Aristas
                 for(int i=0; i < getGraphId.Edges.Count ;i++)
                 {
+
+                    //Verifica cual es la Arista que se va a eliminar
                     if(getGraphId.Edges[i].Id==idEdge)
 
                     {
+
+
+                        /*Esta parte se encarga de actualizar los InDegree y Outdegree de los nodos 
+                        los cuales estaban relacionados a la Arista que se eliminará*/
 
                         int var1 = getGraphId.Edges[i].StartNode;
                         
@@ -188,7 +228,6 @@ namespace graph.Controllers{
 
 
                         for (int j=0; j < getGraphId.Nodes.Count ;j++){
-
 
                             if (getGraphId.Nodes[j].Id == var1){
 
@@ -215,7 +254,7 @@ namespace graph.Controllers{
                             }
                         }
 
-
+                        //Elimia la Arista en cuestion
                         getGraphId.Edges.RemoveAt(i);
                         return Ok();
 

@@ -5,6 +5,37 @@ using graph.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
+/*
+#############################################################################
+#
+#                       Instituto Tecnológico de Costa Rica
+#
+#                   Área Academica de Ingeniería en Computadores
+#
+#   Curso: CE-1103 Algoritmos y Estructuras de  Datos 1
+#
+#   Programa: C#
+#
+#   Profesor: Jose Isaac Ramirez Herrera
+#
+#   Autores: Fabián Castillo Cerdas, 
+#            Irene Garzona Moya, 
+#            Erick Daniel Obando Venegas, 
+#            José Andrés Quirós Guzmán, 
+#            José Pablo Ramos Madrigal
+#
+#   Fecha de última modificación: 25/06/2021
+#
+#
+#############################################################################
+*/
+
+
+
+
+
+
+
 namespace graph.Controllers{
     
     [ApiController]
@@ -20,9 +51,10 @@ namespace graph.Controllers{
         }
 
 
-        //Post
+        //Añade un un nuevo nodo en un grafo especifico
         [HttpPost]
         public IActionResult AddNewNode(int id)
+
         {
             var listofGraphs=GraphDB.Instance.GetGraphs;
             var getGraphId=GraphDB.Instance.GetGraph(id);
@@ -43,7 +75,7 @@ namespace graph.Controllers{
 
         }
 
-
+        //Retorna todos los nodos de un grafo en especifico
         [HttpGet]
         public IActionResult GetActionResult(int id)
         {   
@@ -57,7 +89,7 @@ namespace graph.Controllers{
             return Ok(getGraphId.Nodes);
         }
 
-        //Elimina todos los nodos 
+        //Elimina todos los nodos de un grafo especifico
         [HttpDelete]
         public IActionResult DeleteAllNodes(int id)
         {
@@ -75,25 +107,32 @@ namespace graph.Controllers{
 
 
 
-        // Elimina nodo respecto al id
+        // Elimina un nodo de un grafo según la id del Nodo
         [HttpDelete("id")]
         public IActionResult Delete(int id,int idNode)
         {
             var getGraphId=GraphDB.Instance.GetGraph(id);
     
-
+            //verifica que el grafo exista
             if(getGraphId==null){
                 return NotFound();
 
 
             }else
             {   
-                
+                //recorre la lista de nodos en busca del nodo a eliminar
+
                 for(int i=0; i < getGraphId.Nodes.Count ;i++)
                 {
+
+                    //Verifica que el nodo exista
                     if(getGraphId.Nodes[i].Id==idNode)
                     {
                         
+                        /*Esta sección se encarga de eliminar las aristas relacionadas con el nodo que se borrará, 
+                        ademas modifica el inDegree y el outDregree de los nodos relacionados con dicha arista*/
+                        
+
 
                         int thisNode = getGraphId.Nodes[i].Id;
 
@@ -197,7 +236,7 @@ namespace graph.Controllers{
                             }
 
                         
-
+                            //remueve la arita que sale del Nodo a eliminar
                             getGraphId.Edges.RemoveAt(startEdgeList[v]);
 
 
@@ -220,11 +259,14 @@ namespace graph.Controllers{
 
                             }
 
+
+                            //remueve la arita que entra al Nodo a eliminar
                             getGraphId.Edges.RemoveAt(endEdgeList[v]);
 
 
                         }
 
+                        //Elimina el Nodo en cuastion
                         getGraphId.Nodes.RemoveAt(i);
                         return Ok();
                     }
@@ -238,7 +280,7 @@ namespace graph.Controllers{
 
 
 
-        
+        //Modifica la entidad almacenada de un nodo en un grafo especifico según la id del nodo
         [HttpPut("id")]
 
         public IActionResult UpdateNodeValue(int id,int idNode,string newValue){

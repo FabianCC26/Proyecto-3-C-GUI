@@ -8,6 +8,36 @@ using graph.Entities;
 using Microsoft.EntityFrameworkCore;
 using graph.Database;
 
+
+/*
+#############################################################################
+#
+#                       Instituto Tecnológico de Costa Rica
+#
+#                   Área Academica de Ingeniería en Computadores
+#
+#   Curso: CE-1103 Algoritmos y Estructuras de  Datos 1
+#
+#   Programa: C#
+#
+#   Profesor: Jose Isaac Ramirez Herrera
+#
+#   Autores: Fabián Castillo Cerdas, 
+#            Irene Garzona Moya, 
+#            Erick Daniel Obando Venegas, 
+#            José Andrés Quirós Guzmán, 
+#            José Pablo Ramos Madrigal
+#
+#   Fecha de última modificación: 25/06/2021
+#
+#
+#############################################################################
+*/
+
+
+
+
+
 namespace graph.Controllers
 {
     [ApiController]
@@ -20,6 +50,8 @@ namespace graph.Controllers
             _logger = logger;
         }
 
+
+        //Retorna todos los grafos existentes
         [HttpGet]
         public List<Graph> GetAllGraphs()
         {
@@ -34,12 +66,19 @@ namespace graph.Controllers
             }
             return Ok(getGraphId);
         }
+
+
+        //Crea un nuevo grafo
         [HttpPost]
         public IActionResult Post()
         {
             GraphDB.Instance.addGraph();
             return Ok();
         }
+
+
+
+
         //Elimina todos los grafos
         [HttpDelete]
         public IActionResult DeleteAllGraphs()
@@ -54,6 +93,11 @@ namespace graph.Controllers
                 return Ok();
             }  
         }
+
+
+
+
+
         //Elimina el grafo con respecto al Id 
         [HttpDelete("{id}")]
         public IActionResult DeleteIdGraph(int id)

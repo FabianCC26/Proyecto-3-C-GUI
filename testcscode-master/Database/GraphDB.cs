@@ -2,13 +2,43 @@ using System;
 using System.Collections.Generic;
 using graph.Entities;
 
+/*
+#############################################################################
+#
+#                       Instituto Tecnológico de Costa Rica
+#
+#                   Área Academica de Ingeniería en Computadores
+#
+#   Curso: CE-1103 Algoritmos y Estructuras de  Datos 1
+#
+#   Programa: C#
+#
+#   Profesor: Jose Isaac Ramirez Herrera
+#
+#   Autores: Fabián Castillo Cerdas, 
+#         Irene Garzona Moya, 
+#         Erick Daniel Obando Venegas, 
+#         José Andrés Quirós Guzmán, 
+#         José Pablo Ramos Madrigal
+#
+#   Fecha de última modificación: 25/06/2021
+#
+#
+#
+#############################################################################
+*/
+
+
+
 namespace graph.Database
 {
     public class GraphDB
     {
-        /* 
-        El singleton que hizo el profe para asi solo tener una sola referencia de la lista que contiene todos los grafos
-         */
+      
+
+        //Singleton para solo tener una instancia unica de la lista de grafos
+
+
         private static GraphDB instance;
         private static readonly object padlock = new object();
         private List<Graph> graphs = new List<Graph>();
